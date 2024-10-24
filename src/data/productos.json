@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "title": "Jordan Flight MVP Tee",
+        "description": "Camiseta Jordan para Hombre",
+        "code": "abc",
+        "price": 100,
+        "status": true,
+        "stock": 10,
+        "category": "Camisetas"
+        
+    },
+    {
+        "id": 2,
+        "title": "Nike Air Max INTRLK Lite Women",
+        "description": "Zapatillas modernas para Mujer",
+        "code": "qtr",
+        "price": 80,
+        "status": true,
+        "stock": 10,
+        "category": "Calzado"
+       
+    },
+    {
+        "id": 3,
+        "title": "Nike Zenvy Tie-Dye Shorts",
+        "description": "Pantalones cortos de Entrenamiento para Mujer",
+        "code": "bvc",
+        "price": 90,
+        "status": true,
+        "stock": 5,
+        "category": "Ropa Deportiva"
+        
+    },
+    {
+        "id": 4,
+        "title": "Nike Pegasus 41 Running Shoes",
+        "description": "Zapatillas de Running para Mujer",
+        "code": "byt",
+        "price": 90,
+        "status": true,
+        "stock": 5,
+        "category": "Calzado Deportivo"
+        
+    },
+    {
+        "id": 5,
+        "title": "FC Barcelona 2022/23 Alternate Jersey",
+        "description": "Camiseta de Fútbol para Hombre",
+        "code": "piop",
+        "price": 50,
+        "status": true,
+        "stock": 3,
+        "category": "Camisetas"
+        
+    },
+    {
+        "id": 6,
+        "title": "Nike Yoga Luxe Shorts",
+        "description": "Pantalones cortos de Yoga para Mujer",
+        "code": "ert",
+        "price": 50,
+        "status": true,
+        "stock": 3,
+        "category": "Ropa Deportiva"
+       
+    }
+]
