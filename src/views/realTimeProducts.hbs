@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos en Tiempo Real</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="../public/styles.css">
 </head>
 <body>
-    <h1>Manejo de productos en timpo real dentro de la PreEntrega 2</h1>
+    <h1>Manejo de productos en tiempo real, en esta PreEntrega 2</h1>
 
     <ul id="lista-productos">
         {{#each productos}}
-            <li data-id="{{@index}}">{{nombre}} - ${{precio}} 
-                <button class="eliminar-producto" data-id="{{@index}}">Eliminar</button>
+            <li data-id="{{id}}">{{title}} - ${{price}} 
+                <button class="eliminar-producto" data-id="{{id}}">Eliminar</button>
             </li>
         {{/each}}
     </ul>
 
-    <h2>Agregar un nuevo producto</h2>
+    <h2>Agregar un nuevo producto (Actualización del Productos.JSON en tiempo real)</h2>
     <form id="form-agregar-producto">
-        <label for="nombre">Nombre del producto:</label>
-        <input type="text" id="nombre" name="nombre" required>
+        <label for="title">Nombre del producto:</label>
+        <input type="text" id="title" name="title" required>
         
-        <label for="precio">Precio:</label>
-        <input type="number" id="precio" name="precio" required>
+        <label for="price">Precio:</label>
+        <input type="number" id="price" name="price" required>
 
+        
         <button type="submit">Agregar Producto</button>
     </form>
 
@@ -32,36 +33,34 @@
     <script>
         const socket = io();
 
-        
         socket.on('producto-actualizado', (productos) => {
             const lista = document.getElementById('lista-productos');
             lista.innerHTML = ''; 
 
-            productos.forEach((producto, index) => {
+            productos.forEach(producto => {
                 const li = document.createElement('li');
-                li.setAttribute('data-id', index);
-                li.innerHTML = `${producto.nombre} - $${producto.precio} 
-                    <button class="eliminar-producto" data-id="${index}">Eliminar</button>`;
+                li.setAttribute('data-id', producto.id);
+                li.innerHTML = `${producto.title} - $${producto.price} 
+                    <button class="eliminar-producto" data-id="${producto.id}">Eliminar</button>`;
                 lista.appendChild(li);
             });
         });
 
-       
         document.getElementById('form-agregar-producto').addEventListener('submit', (e) => {
             e.preventDefault();
-            const nombre = document.getElementById('nombre').value;
-            const precio = document.getElementById('precio').value;
+            const title = document.getElementById('title').value;
+            const price = document.getElementById('price').value;
 
-            socket.emit('nuevo-producto', { nombre, precio });
+            socket.emit('nuevo-producto', { title, price });
 
-            document.getElementById('nombre').value = '';
-            document.getElementById('precio').value = '';
+            document.getElementById('title').value = '';
+            document.getElementById('price').value = '';
         });
 
         document.getElementById('lista-productos').addEventListener('click', (e) => {
             if (e.target.classList.contains('eliminar-producto')) {
                 const id = e.target.getAttribute('data-id');
-                socket.emit('eliminar-producto', id);
+                socket.emit('eliminar-producto', Number(id));
             }
         });
     </script>

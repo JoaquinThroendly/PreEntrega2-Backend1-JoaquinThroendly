@@ -8,67 +8,55 @@ export default class ProductManager {
     }
 
     static async fetchProducts() {
-        let products = []
-        if (fs.existsSync(this.#filePath)) {
-            const data = await fs.promises.readFile(this.#filePath, { encoding: 'utf-8' });
-            return products=JSON.parse(data);
+        try {
+            if (fs.existsSync(this.#filePath)) {
+                const data = await fs.promises.readFile(this.#filePath, { encoding: 'utf-8' });
+                return data ? JSON.parse(data) : []; 
+            }
+            return []; 
+        } catch (error) {
+            console.error('Error leyendo productos:', error);
+            return [];
         }
-        return [];
     }
 
     static async #saveToFile(content = '') {
-        if (typeof content !== 'string') {
-            throw new Error('Error in saveToFile method - invalid argument format');
-        }
         await fs.promises.writeFile(this.#filePath, content);
+        console.log('Archivo actualizado');
     }
 
     static async addProduct(product = {}) {
-        let productos= []
-        try {
-            const data = await this.fetchProducts()
-            productos=data
-        } catch (error) {
-            console.error("Error añadiendo el producto:", error);
-            throw error;
+        const products = await this.fetchProducts();
+
+        if ('id' in product) {
+            delete product.id;
         }
-        let id = productos.lenght>0 ?productos[productos.lenght-1].id +1:1
-        const productoExistente= productos.find(p=>p.code===product.code)
-        if (productoExistente){
-            throw new Error('El producto ya existe');
-        }
-        let newProduct= {
-            id, 
-            ...product
-        }
-        productos.push(newProduct)
-        await this.updateProducts(JSON.stringify(productos, null, 4))
-        return newProduct
+
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id || 0)) + 1 : 1;
+
+        const newProduct = {
+            id: newId,  
+            ...product,  
+        };
+
+        products.push(newProduct);
+        await this.#saveToFile(JSON.stringify(products, null, 4));
+        console.log('Producto agregado exitosamente:', newProduct);
+
+        return newProduct;
     }
 
-    static async fetchProductsById(id){
-        let productos = []
-        try {
-            const data = await this.fetchProducts()
-            const producto = data.find(producto=>producto.id===id)
-            if(!producto){
-                throw new Error(`Producto con ${id} no encontrado`)
-            }
-            productos.push(producto)
-            return producto
-        } catch (error) {
-            console.error("Error obteniendo el producto por ID:", error);
-            throw error;
-        }
-    }
+    static async deleteProduct(id) {
+        const products = await this.fetchProducts();
+        const index = products.findIndex(product => product.id === id);
 
-    static async updateProducts(productsArray = []) {
-        if (!Array.isArray(productsArray)) {
-            throw new Error('Error in updateProducts method - expected an array');
+        if (index === -1) {
+            throw new Error(`Producto con ID ${id} no encontrado`);
         }
 
-        await this.#saveToFile(JSON.stringify(productsArray, null, 4));
-        console.log('Products updated successfully');
+        products.splice(index, 1);
+        await this.#saveToFile(JSON.stringify(products, null, 4));
+        console.log(`Producto con ID ${id} eliminado`);
+        return { message: `Producto con ID ${id} eliminado exitosamente` };
     }
 }
-
